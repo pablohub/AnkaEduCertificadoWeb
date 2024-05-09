@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:insert="~{fragments/include}"/>
+<body>
+<div th:insert="~{fragments/menu-bar}"/>
+<section class="home-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h4>Registrar Grupos</h4>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <form th:action="@{/crearGrupo}" th:object="${grupo}" method="post" class="d-flex">
+                    <select class="form-select" th:field="*{centroCapacitacion}">
+                        <option value="anka">ANKA</option>
+                        <option value="cip">CIP</option>
+                    </select>
+                    <input type="text" class="form-control" placeholder="Nombre Grupo" th:field="*{nombre}">
+                    <button class="btn btn-success" type="submit">
+                        Crear
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+        <div class="row mt-2">
+            <table class="table table-hover" id="tblGrupos">
+                <thead>
+                <tr class="table-primary">
+                    <th scope="col">#</th>
+                    <th scope="col">Centro Capacitación</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="grupo, itemStat : ${listaGrupos}">
+                    <td th:text="${itemStat.count}"></td>
+                    <td th:text="${grupo.centroCapacitacion}"></td>
+                    <td th:text="${grupo.nombre}"></td>
+                    <td>
+                        <a th:href="@{/eliminarGrupo/{id}(id=${grupo.id})}" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<footer th:insert="~{fragments/footer}" />
+</body>
+</html>

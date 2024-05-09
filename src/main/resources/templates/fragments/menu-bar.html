@@ -1,0 +1,44 @@
+<div class="sidebar">
+  <div class="logo-details">
+    <i class='bx bxl-c-plus-plus icon'></i>
+    <div class="logo_name">AnkaEdu</div>
+    <i class='bx bx-menu' id="btn" ></i>
+  </div>
+  <ul class="nav-list">
+    <li>
+      <a th:href="@{/grupos}">
+        <i class='bx bx-group' ></i>
+        <span class="links_name">Grupos</span>
+      </a>
+      <span class="tooltip">Grupos</span>
+    </li>
+    <li>
+      <a th:href="@{/anka}">
+        <i class='bx bx-user' ></i>
+        <span class="links_name">Anka</span>
+      </a>
+      <span class="tooltip">Anka</span>
+    </li>
+    <li>
+      <a th:href="@{/cip}">
+        <i class='bx bx-user' ></i>
+        <span class="links_name">CIP</span>
+      </a>
+      <span class="tooltip">CIP</span>
+    </li>
+    <li class="profile">
+      <div class="profile-details">
+        <img th:src="@{/images/user.png}" alt="profileImg">
+        <div class="name_job">
+          <div class="name">Admin</div>
+          <div class="job">Web Administrator</div>
+        </div>
+      </div>
+      <form th:action="@{/logout}" method="post">
+        <button type="submit" value="Sign Out">
+          <i class='bx bx-log-out' id="log_out" ></i>
+        </button>
+      </form>
+    </li>
+  </ul>
+</div>

@@ -1,26 +1,41 @@
 package com.pdev.AnkaEduCertificadoWeb.controller;
 
 import com.pdev.AnkaEduCertificadoWeb.model.Grupo;
-import com.pdev.AnkaEduCertificadoWeb.repository.GrupoRepository;
+import com.pdev.AnkaEduCertificadoWeb.service.IGrupoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/grupo")
+@Controller
 public class GrupoController {
 
-    @Autowired
-    private GrupoRepository grupoRepository;
+    private static final Logger logger = LoggerFactory.getLogger(EstudianteController.class);
 
-    @PostMapping
-    public String crear(){
+    @Autowired
+    private IGrupoService grupoService;
+
+    @GetMapping("/grupos")
+    public String grupos(Model model){
+        logger.info("grupos");
         Grupo grupo = new Grupo();
-        grupo.setNombre("Grupo 1");
-        grupo.setCentroCapacitacion("ANKA");
-        grupoRepository.save(grupo);
-        return "Grupo creado!";
+        model.addAttribute("grupo", grupo);
+        model.addAttribute("listaGrupos", grupoService.listarTodosLosGrupos());
+        return "grupos";
+    }
+
+    @PostMapping("/crearGrupo")
+    public String crearGrupo(@ModelAttribute("grupo") Grupo grupo){
+        grupoService.crearGrupo(grupo);
+        return "redirect:/grupos";
+    }
+
+    @GetMapping("/eliminarGrupo/{id}")
+    public String eliminarGrupo(@PathVariable Long id){
+        grupoService.eliminarGrupo(id);
+        return "redirect:/grupos";
     }
 
 }

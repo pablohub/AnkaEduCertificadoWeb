@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:insert="~{fragments/include}"/>
+<body>
+<div class="container">
+    <div class="row mt-5 text-center">
+        <div class="col-md-12">
+            <h4><strong>AUTENTICACIÓN DE CERTIFICADOS</strong></h4>
+        </div>
+    </div>
+    <div class="row mt-1 text-center">
+        <div class="col-md-12"><strong style="color: #00e100">VERIFICADO <img th:src="@{/images/check.png}" alt="verificado" width="17px"></strong></div>
+    </div>
+    <div class="row text-center">
+        <hr>
+    </div>
+    <div class="row">
+        <div class="col-md-12" th:object="${estudiante}">
+            <div>
+                <fieldset disabled="">
+                    <label class="form-label" for="txtCodigo"><strong>CÓDIGO</strong></label>
+                    <input class="form-control" id="txtCodigo" type="text" th:value="*{codigo}" disabled="">
+                </fieldset>
+            </div>
+            <div>
+                <fieldset disabled="">
+                    <label class="form-label" for="txtNombres"><strong>NOMBRES</strong></label>
+                    <input class="form-control" id="txtNombres" type="text" th:value="*{nombres}" disabled="">
+                </fieldset>
+            </div>
+            <div>
+                <fieldset disabled="">
+                    <label class="form-label" for="txtCurso"><strong>CURSO</strong></label>
+                    <input class="form-control" id="txtCurso" type="text" th:value="*{curso}" disabled="">
+                </fieldset>
+            </div>
+            <div>
+                <fieldset disabled="">
+                    <label class="form-label" for="txtCentroCapacitacion"><strong>CENTRO DE CAPACITACIÓN</strong></label>
+                    <input class="form-control" id="txtCentroCapacitacion" type="text" th:value="*{centroCapacitacion}" disabled="">
+                </fieldset>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div>
+                        <fieldset disabled="">
+                            <label class="form-label" for="txtFechaInicio"><strong>FECHA DE INICIO</strong></label>
+                            <input class="form-control" id="txtFechaInicio" type="text" th:value="*{fechaInicio}" disabled="">
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div>
+                        <fieldset disabled="">
+                            <label class="form-label" for="txtFechaFinalizacion"><strong>FECHA DE FINALIZACION</strong></label>
+                            <input class="form-control" id="txtFechaFinalizacion" type="text" th:value="*{fechaFinalizacion}" disabled="">
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
