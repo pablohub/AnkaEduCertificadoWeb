@@ -54,8 +54,8 @@ public class PdfController {
             Resource resourceHelvetica97 = resourceLoader.getResource("classpath:fonts/Helvetica_97.ttf");
             //ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
             Resource resourceHelvetica47 = resourceLoader.getResource("classpath:fonts/Helvetica_47.ttf");
-            String fontHelvetica97 = resourceHelvetica97.getFile().getAbsolutePath();
-            String fontHelvetica47 = resourceHelvetica47.getFile().getAbsolutePath();
+            String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
+            String fontHelvetica47 = resourceHelvetica47.getFile().getPath();
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
@@ -161,8 +161,8 @@ public class PdfController {
             Resource resourceHelvetica97 = resourceLoader.getResource("classpath:fonts/Helvetica_97.ttf");
             //ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
             Resource resourceHelvetica47 = resourceLoader.getResource("classpath:fonts/Helvetica_47.ttf");
-            String fontHelvetica97 = resourceHelvetica97.getFile().getAbsolutePath();
-            String fontHelvetica47 = resourceHelvetica47.getFile().getAbsolutePath();
+            String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
+            String fontHelvetica47 = resourceHelvetica47.getFile().getPath();
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
