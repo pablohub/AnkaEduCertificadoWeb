@@ -90,11 +90,12 @@ public class PdfController {
                 String texto = estudiante.getNombres();
 
                 //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                BaseFont baseFont = BaseFont.createFont
+                BaseFont baseFont = BaseFont.createFont("resources/static/fonts/Helvetica_97.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                /*BaseFont baseFont = BaseFont.createFont
                         (BaseFont.TIMES_BOLD, //Font name
                                 BaseFont.CP1257, //Font encoding
                                 BaseFont.EMBEDDED //Font embedded
-                        );
+                        );*/
                 float fontSize = 32.85f;
 
                 float textWidth = baseFont.getWidthPoint(texto, fontSize);
@@ -200,6 +201,7 @@ public class PdfController {
                 String texto = estudiante.getNombres();
 
                 //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
                 BaseFont baseFont = BaseFont.createFont
                         (BaseFont.TIMES_BOLD, //Font name
                                 BaseFont.CP1257, //Font encoding
