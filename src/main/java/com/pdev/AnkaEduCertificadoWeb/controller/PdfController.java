@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Controller
 public class PdfController {
@@ -54,8 +55,9 @@ public class PdfController {
             Resource resourceHelvetica97 = resourceLoader.getResource("classpath:static/fonts/Helvetica_97.ttf");
             //ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
             //Resource resourceHelvetica47 = resourceLoader.getResource("classpath:fonts/Helvetica_47.ttf");
-            String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
+            InputStream fontHelvetica97 = resourceHelvetica97.getInputStream();
             //String fontHelvetica47 = resourceHelvetica47.getFile().getPath();
+            logger.info("InputStream: " + fontHelvetica97);
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
@@ -87,12 +89,12 @@ public class PdfController {
                 logger.info("pageHeight: " + pageHeight);
                 String texto = estudiante.getNombres();
 
-                BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                /*BaseFont baseFont = BaseFont.createFont
+                //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                BaseFont baseFont = BaseFont.createFont
                         (BaseFont.TIMES_BOLD, //Font name
                                 BaseFont.CP1257, //Font encoding
                                 BaseFont.EMBEDDED //Font embedded
-                        );*/
+                        );
                 float fontSize = 32.85f;
 
                 float textWidth = baseFont.getWidthPoint(texto, fontSize);
