@@ -51,10 +51,10 @@ public class PdfController {
         try{
 
             //ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
-            //Resource resourceHelvetica97 = resourceLoader.getResource("classpath:fonts/Helvetica_97.ttf");
+            Resource resourceHelvetica97 = resourceLoader.getResource("classpath:static/fonts/Helvetica_97.ttf");
             //ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
             //Resource resourceHelvetica47 = resourceLoader.getResource("classpath:fonts/Helvetica_47.ttf");
-            //String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
+            String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
             //String fontHelvetica47 = resourceHelvetica47.getFile().getPath();
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
@@ -71,6 +71,10 @@ public class PdfController {
             //image.setAbsolutePosition(711.75f, 45.75f); //Set position for image in PDF
             image.setAbsolutePosition(712.5f, 46.5f); //Set position for image in PDF
 
+            String fontPath = "src/main/resources/fonts/YourCustomFont.ttf";
+
+            // Crear un objeto PdfFont a partir de la fuente personalizada
+
             // loop on all the PDF pages
             // i is the pdfPageNumber
             System.out.println("pdfReader.getNumberOfPages(): " + pdfReader.getNumberOfPages());
@@ -83,12 +87,12 @@ public class PdfController {
                 logger.info("pageHeight: " + pageHeight);
                 String texto = estudiante.getNombres();
 
-                //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                BaseFont baseFont = BaseFont.createFont
+                BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                /*BaseFont baseFont = BaseFont.createFont
                         (BaseFont.TIMES_BOLD, //Font name
                                 BaseFont.CP1257, //Font encoding
                                 BaseFont.EMBEDDED //Font embedded
-                        );
+                        );*/
                 float fontSize = 32.85f;
 
                 float textWidth = baseFont.getWidthPoint(texto, fontSize);
