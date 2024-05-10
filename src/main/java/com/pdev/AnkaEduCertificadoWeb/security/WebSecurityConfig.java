@@ -25,7 +25,7 @@ public class WebSecurityConfig {
                 //.and()
                 .authorizeRequests((requests) -> requests
                         //.antMatchers("../static/css", "../static/images").permitAll()
-                        .antMatchers("/css/**", "/js/**", "/images/**", "/public/**", "/autenticacionCertificado/**").permitAll()
+                        .antMatchers("/resources/fonts/**", "/css/**", "/js/**", "/images/**", "/public/**", "/autenticacionCertificado/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
