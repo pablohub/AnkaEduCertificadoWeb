@@ -51,14 +51,14 @@ public class PdfController {
         Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoAnka.pdf");
         try{
 
-            //ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
-            Resource resourceHelvetica97 = resourceLoader.getResource("classpath:static/fonts/Helvetica_97.ttf");
+            ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
+            //Resource resourceHelvetica97 = resourceLoader.getResource("classpath:static/fonts/Helvetica_97.ttf");
             //ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
             //Resource resourceHelvetica47 = resourceLoader.getResource("classpath:fonts/Helvetica_47.ttf");
-            //String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
+            String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
             //InputStream fontHelvetica97 = resourceHelvetica97.getInputStream();
             //String fontHelvetica47 = resourceHelvetica47.getFile().getPath();
-            //logger.info("fontHelvetica97: " + fontHelvetica97);
+            logger.info("fontHelvetica97: " + fontHelvetica97);
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
