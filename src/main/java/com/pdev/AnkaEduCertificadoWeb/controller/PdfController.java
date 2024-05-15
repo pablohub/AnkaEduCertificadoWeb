@@ -51,13 +51,14 @@ public class PdfController {
         Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoAnka.pdf");
         try{
 
-            //ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
-            Resource resourceHelvetica97 = resourceLoader.getResource("classpath:static/fonts/Helvetica_97.ttf");
-            //ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
+            ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
+            //Resource resourceHelvetica97 = resourceLoader.getResource("classpath:static/fonts/Helvetica_97.ttf");
+            ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
             //Resource resourceHelvetica47 = resourceLoader.getResource("classpath:fonts/Helvetica_47.ttf");
             //String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
             InputStream fontHelvetica97 = resourceHelvetica97.getInputStream();
             //String fontHelvetica47 = resourceHelvetica47.getFile().getPath();
+            InputStream fontHelvetica47 = resourceHelvetica97.getInputStream();
             logger.info("fontHelvetica97: " + fontHelvetica97);
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
@@ -92,14 +93,14 @@ public class PdfController {
 
                 //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                 //BaseFont baseFont = BaseFont.createFont("resources/static/fonts/Helvetica_97.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = fontHelvetica97.read(buffer)) != -1) {
-                    baos.write(buffer, 0, bytesRead);
+                ByteArrayOutputStream baosfontHelvetica97 = new ByteArrayOutputStream();
+                byte[] bufferfontHelvetica97 = new byte[1024];
+                int bytesReadfontHelvetica97;
+                while ((bytesReadfontHelvetica97 = fontHelvetica97.read(bufferfontHelvetica97)) != -1) {
+                    baosfontHelvetica97.write(bufferfontHelvetica97, 0, bytesReadfontHelvetica97);
                 }
-                byte[] fontBytes = baos.toByteArray();
-                BaseFont baseFont = BaseFont.createFont("Helvetica_97.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytes, null);
+                byte[] fontBytes = baosfontHelvetica97.toByteArray();
+                BaseFont baseFontHelvetica97 = BaseFont.createFont("Helvetica_97.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytes, null);
                 /*BaseFont baseFont = BaseFont.createFont
                         (BaseFont.TIMES_BOLD, //Font name
                                 BaseFont.CP1257, //Font encoding
@@ -107,20 +108,28 @@ public class PdfController {
                         );*/
                 float fontSize = 32.85f;
 
-                float textWidth = baseFont.getWidthPoint(texto, fontSize);
+                float textWidth = baseFontHelvetica97.getWidthPoint(texto, fontSize);
                 float centerX = (pageHeight - textWidth) / 2;//Se utiliza pagHeight porque lo calcula en orientación horizontal el largo es como si fuera la altura
 
                 PdfContentByte pdfContentByte = pdfStamper.getOverContent(i);
                 pdfContentByte.beginText();
-                pdfContentByte.setFontAndSize(baseFont, fontSize); // set font and size
+                pdfContentByte.setFontAndSize(baseFontHelvetica97, fontSize); // set font and size
                 pdfContentByte.setTextMatrix(centerX, 245.75f); // set x and y co-ordinates
                 pdfContentByte.setRGBColorFill(34, 34, 34);
                 //pdfContentByte.setRGBColorFill(255, 0, 0);
                 pdfContentByte.showText(texto);
                 pdfContentByte.endText();
 
+                ByteArrayOutputStream baosfontHelvetica47 = new ByteArrayOutputStream();
+                byte[] bufferfontHelvetica47 = new byte[1024];
+                int bytesReadfontHelvetica47;
+                while ((bytesReadfontHelvetica47 = fontHelvetica47.read(bufferfontHelvetica47)) != -1) {
+                    baosfontHelvetica47.write(bufferfontHelvetica47, 0, bytesReadfontHelvetica47);
+                }
+                byte[] fontBytesfontHelvetica47 = baosfontHelvetica47.toByteArray();
+                BaseFont baseFontHelvetica47 = BaseFont.createFont("Helvetica_47.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytesfontHelvetica47, null);
                 pdfContentByte.beginText();
-                pdfContentByte.setFontAndSize(baseFont
+                pdfContentByte.setFontAndSize(baseFontHelvetica47
                         , 12.5f); // set font and size
                 pdfContentByte.setTextMatrix(742, 27.5f); // set x and y co-ordinates
                 pdfContentByte.setRGBColorFill(92, 92, 92);
@@ -174,12 +183,15 @@ public class PdfController {
         Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoCIP.pdf");
         try{
 
-            //ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
-            //Resource resourceHelvetica97 = resourceLoader.getResource("classpath:fonts/Helvetica_97.ttf");
-            //ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
+            ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
+            //Resource resourceHelvetica97 = resourceLoader.getResource("classpath:static/fonts/Helvetica_97.ttf");
+            ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
             //Resource resourceHelvetica47 = resourceLoader.getResource("classpath:fonts/Helvetica_47.ttf");
             //String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
+            InputStream fontHelvetica97 = resourceHelvetica97.getInputStream();
             //String fontHelvetica47 = resourceHelvetica47.getFile().getPath();
+            InputStream fontHelvetica47 = resourceHelvetica97.getInputStream();
+            logger.info("fontHelvetica97: " + fontHelvetica97);
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
@@ -211,27 +223,38 @@ public class PdfController {
 
                 //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
-                BaseFont baseFont = BaseFont.createFont
-                        (BaseFont.TIMES_BOLD, //Font name
-                                BaseFont.CP1257, //Font encoding
-                                BaseFont.EMBEDDED //Font embedded
-                        );
+                ByteArrayOutputStream baosfontHelvetica97 = new ByteArrayOutputStream();
+                byte[] bufferfontHelvetica97 = new byte[1024];
+                int bytesReadfontHelvetica97;
+                while ((bytesReadfontHelvetica97 = fontHelvetica97.read(bufferfontHelvetica97)) != -1) {
+                    baosfontHelvetica97.write(bufferfontHelvetica97, 0, bytesReadfontHelvetica97);
+                }
+                byte[] fontBytes = baosfontHelvetica97.toByteArray();
+                BaseFont baseFontHelvetica97 = BaseFont.createFont("Helvetica_97.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytes, null);
                 float fontSize = 32.85f;
 
-                float textWidth = baseFont.getWidthPoint(texto, fontSize);
+                float textWidth = baseFontHelvetica97.getWidthPoint(texto, fontSize);
                 float centerX = (pageHeight - textWidth) / 2;//Se utiliza pagHeight porque lo calcula en orientación horizontal el largo es como si fuera la altura
 
                 PdfContentByte pdfContentByte = pdfStamper.getOverContent(i);
                 pdfContentByte.beginText();
-                pdfContentByte.setFontAndSize(baseFont, fontSize); // set font and size
+                pdfContentByte.setFontAndSize(baseFontHelvetica97, fontSize); // set font and size
                 pdfContentByte.setTextMatrix(centerX, 313); // set x and y co-ordinates
                 pdfContentByte.setRGBColorFill(34, 34, 34);
                 //pdfContentByte.setRGBColorFill(255, 0, 0);
                 pdfContentByte.showText(texto);
                 pdfContentByte.endText();
 
+                ByteArrayOutputStream baosfontHelvetica47 = new ByteArrayOutputStream();
+                byte[] bufferfontHelvetica47 = new byte[1024];
+                int bytesReadfontHelvetica47;
+                while ((bytesReadfontHelvetica47 = fontHelvetica47.read(bufferfontHelvetica47)) != -1) {
+                    baosfontHelvetica47.write(bufferfontHelvetica47, 0, bytesReadfontHelvetica47);
+                }
+                byte[] fontBytesfontHelvetica47 = baosfontHelvetica47.toByteArray();
+                BaseFont baseFontHelvetica47 = BaseFont.createFont("Helvetica_47.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytesfontHelvetica47, null);
                 pdfContentByte.beginText();
-                pdfContentByte.setFontAndSize(baseFont
+                pdfContentByte.setFontAndSize(baseFontHelvetica47
                         , 12.5f); // set font and size
                 pdfContentByte.setTextMatrix(640, 27.75f); // set x and y co-ordinates
                 pdfContentByte.setRGBColorFill(34, 34, 34);
