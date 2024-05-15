@@ -55,8 +55,8 @@ public class PdfController {
             Resource resourceHelvetica97 = resourceLoader.getResource("classpath:static/fonts/Helvetica_97.ttf");
             //ClassPathResource resourceHelvetica47 = new ClassPathResource("fonts/Helvetica_47.ttf");
             //Resource resourceHelvetica47 = resourceLoader.getResource("classpath:fonts/Helvetica_47.ttf");
-            String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
-            //InputStream fontHelvetica97 = resourceHelvetica97.getInputStream();
+            //String fontHelvetica97 = resourceHelvetica97.getFile().getPath();
+            InputStream fontHelvetica97 = resourceHelvetica97.getInputStream();
             //String fontHelvetica47 = resourceHelvetica47.getFile().getPath();
             logger.info("fontHelvetica97: " + fontHelvetica97);
 
@@ -92,11 +92,19 @@ public class PdfController {
 
                 //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                 //BaseFont baseFont = BaseFont.createFont("resources/static/fonts/Helvetica_97.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                BaseFont baseFont = BaseFont.createFont
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = fontHelvetica97.read(buffer)) != -1) {
+                    baos.write(buffer, 0, bytesRead);
+                }
+                byte[] fontBytes = baos.toByteArray();
+                BaseFont baseFont = BaseFont.createFont("Helvetica_97.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytes, null);
+                /*BaseFont baseFont = BaseFont.createFont
                         (BaseFont.TIMES_BOLD, //Font name
                                 BaseFont.CP1257, //Font encoding
                                 BaseFont.EMBEDDED //Font embedded
-                        );
+                        );*/
                 float fontSize = 32.85f;
 
                 float textWidth = baseFont.getWidthPoint(texto, fontSize);
