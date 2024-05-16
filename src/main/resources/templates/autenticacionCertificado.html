@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:insert="~{fragments/include}"/>
 <body>
-<div class="container">
+<div class="container" style="max-width:720px;">
     <div class="row mt-5 text-center">
         <div class="col-md-12">
             <h4><strong>AUTENTICACIÓN DE CERTIFICADOS</strong></h4>
@@ -18,31 +18,31 @@
     </div>
     <div class="row">
         <div class="col-md-12" th:object="${estudiante}">
-            <div>
+            <div class="mt-2">
                 <fieldset disabled="">
                     <label class="form-label" for="txtCodigo"><strong>CÓDIGO</strong></label>
                     <input class="form-control" id="txtCodigo" type="text" th:value="*{codigo}" disabled="">
                 </fieldset>
             </div>
-            <div>
+            <div class="mt-2">
                 <fieldset disabled="">
                     <label class="form-label" for="txtNombres"><strong>NOMBRES</strong></label>
                     <input class="form-control" id="txtNombres" type="text" th:value="*{nombres}" disabled="">
                 </fieldset>
             </div>
-            <div>
+            <div class="mt-2">
                 <fieldset disabled="">
                     <label class="form-label" for="txtCurso"><strong>CURSO</strong></label>
                     <input class="form-control" id="txtCurso" type="text" th:value="*{curso}" disabled="">
                 </fieldset>
             </div>
-            <div>
+            <div class="mt-2">
                 <fieldset disabled="">
                     <label class="form-label" for="txtCentroCapacitacion"><strong>CENTRO DE CAPACITACIÓN</strong></label>
                     <input class="form-control" id="txtCentroCapacitacion" type="text" th:value="*{centroCapacitacion}" disabled="">
                 </fieldset>
             </div>
-            <div class="row">
+            <div class="row mt-2">
                 <div class="col-md-6">
                     <div>
                         <fieldset disabled="">
