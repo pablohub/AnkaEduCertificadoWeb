@@ -1,5 +1,6 @@
 package com.pdev.AnkaEduCertificadoWeb.serviceImpl;
 
+import com.pdev.AnkaEduCertificadoWeb.model.Estudiante;
 import com.pdev.AnkaEduCertificadoWeb.model.Grupo;
 import com.pdev.AnkaEduCertificadoWeb.model.response.ResponseGenerico;
 import com.pdev.AnkaEduCertificadoWeb.repository.GrupoRepository;
@@ -20,6 +21,9 @@ public class GrupoService implements IGrupoService {
 
     @Autowired
     private GrupoRepository grupoRepository;
+
+    @Autowired
+    private EstudianteService estudianteService;
 
     @Override
     public ResponseGenerico crearGrupo(Grupo grupo) {
@@ -54,6 +58,11 @@ public class GrupoService implements IGrupoService {
     @Override
     public void eliminarGrupo(Long id) {
         logger.info("eliminarGrupo");
+        Grupo grupo = grupoRepository.findById(id).get();
+        List<Estudiante> estudiantes = estudianteService.listarEstudiantes(grupo.getCentroCapacitacion()+"-"+id);
+        for(Estudiante estudiante : estudiantes){
+            estudianteService.eliminarEstudiantesPorIds(estudiante.getId()+"");
+        }
         grupoRepository.deleteById(id);
     }
 }
