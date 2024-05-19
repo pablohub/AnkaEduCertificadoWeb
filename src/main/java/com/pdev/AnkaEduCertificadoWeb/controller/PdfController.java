@@ -1,5 +1,7 @@
 package com.pdev.AnkaEduCertificadoWeb.controller;
 
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Font;
 import com.pdev.AnkaEduCertificadoWeb.model.Estudiante;
 import com.pdev.AnkaEduCertificadoWeb.service.IEstudianteService;
 import com.pdev.AnkaEduCertificadoWeb.util.QRGenerator;
@@ -11,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,7 +70,7 @@ public class PdfController {
                 baosfontHelvetica47.write(bufferfontHelvetica47, 0, bytesReadfontHelvetica47);
             }
             byte[] fontBytesfontHelvetica47 = baosfontHelvetica47.toByteArray();
-            BaseFont baseFontHelvetica47 = BaseFont.createFont("Helvetica_47.ttf", BaseFont.CP1257, BaseFont.EMBEDDED, false, fontBytesfontHelvetica47, null);
+            BaseFont baseFontHelvetica47 = BaseFont.createFont("Helvetica_47.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytesfontHelvetica47, null);
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
@@ -88,7 +87,7 @@ public class PdfController {
             Image image = Image.getInstance(qrGenerator.imageToBytes(qrGenerator.generarCodigoQR(urlQrCode)));
             image.scaleAbsolute(96, 96); //Scale image's width and height
             //image.setAbsolutePosition(711.75f, 45.75f); //Set position for image in PDF
-            image.setAbsolutePosition(712.5f, 46.5f); //Set position for image in PDF
+            image.setAbsolutePosition(712.25f, 46.75f); //Set position for image in PDF
 
             // loop on all the PDF pages
             // i is the pdfPageNumber
@@ -103,7 +102,7 @@ public class PdfController {
                 String texto = estudiante.getNombres();
 
                 //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                float fontSize = 32.85f;
+                float fontSize = 30.85f;
 
                 float textWidth = baseFontHelvetica97.getWidthPoint(texto, fontSize);
                 float centerX = (pageHeight - textWidth) / 2;//Se utiliza pagHeight porque lo calcula en orientación horizontal el largo es como si fuera la altura
@@ -119,13 +118,20 @@ public class PdfController {
 
                 pdfContentByte.beginText();
                 pdfContentByte.setFontAndSize(baseFontHelvetica47, 12.5f);
-                pdfContentByte.setTextMatrix(742, 27.5f); // set x and y co-ordinates
+                pdfContentByte.setTextMatrix(745.25f, 27.5f); // set x and y co-ordinates
                 pdfContentByte.setRGBColorFill(92, 92, 92);
                 //pdfContentByte.setRGBColorFill(255, 0, 0);
-                //0, 800 will write text on TOP LEFT of pdf page
-                //0, 0 will write text on BOTTOM LEFT of pdf page
                 pdfContentByte.showText(estudiante.getCodigo()); // add the text
+                pdfContentByte.setLeading(0.75f);
+                pdfContentByte.endText();
 
+                pdfContentByte.beginText();
+                pdfContentByte.setFontAndSize(baseFontHelvetica47, 12.5f);
+                pdfContentByte.setTextMatrix(745.75f, 27.5f); // set x and y co-ordinates
+                pdfContentByte.setRGBColorFill(92, 92, 92);
+                //pdfContentByte.setRGBColorFill(255, 0, 0);
+                pdfContentByte.showText(estudiante.getCodigo()); // add the text
+                pdfContentByte.setLeading(0.75f);
                 pdfContentByte.endText();
 
                 pdfContentByte.addImage(image);
@@ -209,8 +215,8 @@ public class PdfController {
             Image image = Image.getInstance(qrGenerator.imageToBytes(qrGenerator.generarCodigoQR(urlQrCode)));
             //image.scaleAbsolute(100, 100); //Scale image's width and height
             //image.setAbsolutePosition(710, 44); //Set position for image in PDF
-            image.scaleAbsolute(96, 96); //Scale image's width and height
-            image.setAbsolutePosition(712.5f, 46.5f); //Set position for image in PDF
+            image.scaleAbsolute(99, 99); //Scale image's width and height
+            image.setAbsolutePosition(710.5f, 45.5f); //Set position for image in PDF
 
             // loop on all the PDF pages
             // i is the pdfPageNumber
@@ -225,7 +231,7 @@ public class PdfController {
                 String texto = estudiante.getNombres();
 
                 //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                float fontSize = 32.85f;
+                float fontSize = 34.85f;
 
                 float textWidth = baseFontHelvetica97.getWidthPoint(texto, fontSize);
                 float centerX = (pageHeight - textWidth) / 2;//Se utiliza pagHeight porque lo calcula en orientación horizontal el largo es como si fuera la altura
@@ -237,6 +243,7 @@ public class PdfController {
                 pdfContentByte.setRGBColorFill(34, 34, 34);
                 //pdfContentByte.setRGBColorFill(255, 0, 0);
                 pdfContentByte.showText(texto);
+                //pdfContentByte.setLeading(10.25f);
                 pdfContentByte.endText();
 
                 pdfContentByte.beginText();
@@ -244,10 +251,17 @@ public class PdfController {
                 pdfContentByte.setTextMatrix(640, 27.75f); // set x and y co-ordinates
                 pdfContentByte.setRGBColorFill(34, 34, 34);
                 //pdfContentByte.setRGBColorFill(255, 0, 0);
-                //0, 800 will write text on TOP LEFT of pdf page
-                //0, 0 will write text on BOTTOM LEFT of pdf page
                 pdfContentByte.showText(estudiante.getCodigo()); // add the text
+                pdfContentByte.setLeading(4.5f);
+                pdfContentByte.endText();
 
+                pdfContentByte.beginText();
+                pdfContentByte.setFontAndSize(baseFontHelvetica47, 12.5f);
+                pdfContentByte.setTextMatrix(640.5f, 27.75f); // set x and y co-ordinates
+                pdfContentByte.setRGBColorFill(34, 34, 34);
+                //pdfContentByte.setRGBColorFill(255, 0, 0);
+                pdfContentByte.showText(estudiante.getCodigo()); // add the text
+                pdfContentByte.setLeading(4.5f);
                 pdfContentByte.endText();
 
                 pdfContentByte.addImage(image);
@@ -284,7 +298,7 @@ public class PdfController {
 
     private String generarNombrePdf(String codigo, String nombres){
         try{
-            return codigo.substring(codigo.length() - 2) + nombres.substring(0, nombres.indexOf(" "));
+            return codigo.substring(codigo.length() - 2) + "_" + nombres.substring(0, nombres.indexOf(" "));
         }catch (Exception e){
             return "FILE";
         }
