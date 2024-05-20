@@ -213,10 +213,10 @@ public class PdfController {
             //Image to be added in existing pdf file.
             QRGenerator qrGenerator = new QRGenerator();
             Image image = Image.getInstance(qrGenerator.imageToBytes(qrGenerator.generarCodigoQR(urlQrCode)));
-            //image.scaleAbsolute(100, 100); //Scale image's width and height
-            //image.setAbsolutePosition(710, 44); //Set position for image in PDF
-            image.scaleAbsolute(99, 99); //Scale image's width and height
-            image.setAbsolutePosition(710.5f, 45.5f); //Set position for image in PDF
+            //image.scaleAbsolute(99, 99); //Scale image's width and height
+            //image.setAbsolutePosition(710.5f, 45.5f); //Set position for image in PDF
+            image.scaleAbsolute(96, 96); //Scale image's width and height
+            image.setAbsolutePosition(712.25f, 46.75f); //Set position for image in PDF
 
             // loop on all the PDF pages
             // i is the pdfPageNumber
