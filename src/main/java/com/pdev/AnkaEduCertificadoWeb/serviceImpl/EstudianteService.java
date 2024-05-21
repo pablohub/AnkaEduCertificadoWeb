@@ -5,6 +5,7 @@ import com.pdev.AnkaEduCertificadoWeb.model.response.ResponseGenerico;
 import com.pdev.AnkaEduCertificadoWeb.repository.EstudianteRepository;
 import com.pdev.AnkaEduCertificadoWeb.service.IEstudianteService;
 import com.pdev.AnkaEduCertificadoWeb.util.AESEncryption;
+import com.pdev.AnkaEduCertificadoWeb.util.Util;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -123,12 +124,13 @@ public class EstudianteService implements IEstudianteService {
                     switch (cellIdx){
                         case 0:
                             estudiante.setCodigo(currentCell.toString());
-                            estudiante.setCodigoEncriptado(
-                                    AESEncryption.encrypt(
-                                                    currentCell.toString())
-                                            .replace("/", "")
-                                            .replace("?", "")
-                            );
+                            String dataEncrypted = AESEncryption.encrypt(
+                                            currentCell.toString())
+                                    .replace("/", "")
+                                    .replace("?", "")
+                                    .replace("=", "");
+                            dataEncrypted = Util.recortarYCompletar(dataEncrypted, 'C');
+                            estudiante.setCodigoEncriptado(dataEncrypted);
                             break;
                         case 1:
                             estudiante.setNombres(currentCell.toString());
