@@ -61,8 +61,7 @@ public class EstudianteService implements IEstudianteService {
     @Override
     public List<Estudiante> listarEstudiantes(String codigoCertificado) {
         logger.info("Listar estudiantes");
-        //return estudianteRepository.findByCodigoCertificado(codigoCertificado);
-        return estudianteRepository.findAll();
+        return estudianteRepository.findByCodigoCertificado(codigoCertificado);
     }
 
     @Override

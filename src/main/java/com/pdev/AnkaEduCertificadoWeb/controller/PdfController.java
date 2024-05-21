@@ -40,7 +40,7 @@ public class PdfController {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         Estudiante estudiante = estudianteService.obtenerEstudiantePorId(id);
-        Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoCIP.pdf");
+        Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoAnka.pdf");
         try{
 
             ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
@@ -163,6 +163,8 @@ public class PdfController {
     public void certificadoCIP(@PathVariable long id, HttpServletResponse response) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
+        // Cargar el archivo PDF original
+
         Estudiante estudiante = estudianteService.obtenerEstudiantePorId(id);
         Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoCIP.pdf");
         try{
@@ -190,23 +192,20 @@ public class PdfController {
                 baosfontHelvetica47.write(bufferfontHelvetica47, 0, bytesReadfontHelvetica47);
             }
             byte[] fontBytesfontHelvetica47 = baosfontHelvetica47.toByteArray();
-            BaseFont baseFontHelvetica47 = BaseFont.createFont("Helvetica_47.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytesfontHelvetica47, null);
+            BaseFont baseFontHelvetica47 = BaseFont.createFont("Helvetica_47.ttf", BaseFont.CP1257, BaseFont.EMBEDDED, false, fontBytesfontHelvetica47, null);
 
             PdfReader pdfReader = new PdfReader(resource.getInputStream());
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
             String codigoEncriptado = estudiante.getCodigoEncriptado();
             String urlQrCode = ServletUriComponentsBuilder.fromCurrentContextPath().build().toString() + "/autenticacionCertificado/" + codigoEncriptado;
             logger.info("urlQrCode: " + urlQrCode);
-
-
-
             //pdfStamper.setEncryption(codigo.getBytes(), codigo.getBytes(), PdfWriter.ALLOW_COPY, PdfWriter.STANDARD_ENCRYPTION_40);
 
             //Image to be added in existing pdf file.
             QRGenerator qrGenerator = new QRGenerator();
             Image image = Image.getInstance(qrGenerator.imageToBytes(qrGenerator.generarCodigoQR(urlQrCode)));
-            image.scaleAbsolute(96, 96); //Scale image's width and height
-            //image.setAbsolutePosition(711.75f, 45.75f); //Set position for image in PDF
+            //image.scaleAbsolute(96, 96); //Scale image's width and height
+            image.scaleAbsolute(92, 92); //scale for railway
             image.setAbsolutePosition(712.25f, 46.75f); //Set position for image in PDF
 
             // loop on all the PDF pages
@@ -222,7 +221,7 @@ public class PdfController {
                 String texto = estudiante.getNombres();
 
                 //BaseFont baseFont = BaseFont.createFont(fontHelvetica97, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                float fontSize = 30.85f;
+                float fontSize = 34.85f;
 
                 float textWidth = baseFontHelvetica97.getWidthPoint(texto, fontSize);
                 float centerX = (pageHeight - textWidth) / 2;//Se utiliza pagHeight porque lo calcula en orientación horizontal el largo es como si fuera la altura
@@ -230,28 +229,29 @@ public class PdfController {
                 PdfContentByte pdfContentByte = pdfStamper.getOverContent(i);
                 pdfContentByte.beginText();
                 pdfContentByte.setFontAndSize(baseFontHelvetica97, fontSize); // set font and size
-                pdfContentByte.setTextMatrix(centerX, 245.75f); // set x and y co-ordinates
+                pdfContentByte.setTextMatrix(centerX, 313); // set x and y co-ordinates
                 pdfContentByte.setRGBColorFill(34, 34, 34);
                 //pdfContentByte.setRGBColorFill(255, 0, 0);
                 pdfContentByte.showText(texto);
+                //pdfContentByte.setLeading(10.25f);
                 pdfContentByte.endText();
 
                 pdfContentByte.beginText();
                 pdfContentByte.setFontAndSize(baseFontHelvetica47, 12.5f);
-                pdfContentByte.setTextMatrix(745.25f, 27.5f); // set x and y co-ordinates
-                pdfContentByte.setRGBColorFill(92, 92, 92);
+                pdfContentByte.setTextMatrix(640, 27.75f); // set x and y co-ordinates
+                pdfContentByte.setRGBColorFill(34, 34, 34);
                 //pdfContentByte.setRGBColorFill(255, 0, 0);
                 pdfContentByte.showText(estudiante.getCodigo()); // add the text
-                pdfContentByte.setLeading(0.75f);
+                pdfContentByte.setLeading(4.5f);
                 pdfContentByte.endText();
 
                 pdfContentByte.beginText();
                 pdfContentByte.setFontAndSize(baseFontHelvetica47, 12.5f);
-                pdfContentByte.setTextMatrix(745.75f, 27.5f); // set x and y co-ordinates
-                pdfContentByte.setRGBColorFill(92, 92, 92);
+                pdfContentByte.setTextMatrix(640.5f, 27.75f); // set x and y co-ordinates
+                pdfContentByte.setRGBColorFill(34, 34, 34);
                 //pdfContentByte.setRGBColorFill(255, 0, 0);
                 pdfContentByte.showText(estudiante.getCodigo()); // add the text
-                pdfContentByte.setLeading(0.75f);
+                pdfContentByte.setLeading(4.5f);
                 pdfContentByte.endText();
 
                 pdfContentByte.addImage(image);
