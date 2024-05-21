@@ -63,7 +63,7 @@
                     <td th:text="${estudiante.fechaFinalizacion}"></td>
                     <td th:text="${estudiante.centroCapacitacion}"></td>
                     <td>
-                        <a th:href="@{/certificadoCIP/{id}(id=${estudiante.id})}" class="btn btn-primary" target="_blank">Certificado</a>
+                        <a th:href="@{/certificadoAnka/{id}(id=${estudiante.id})}" class="btn btn-primary" target="_blank">Certificado</a>
                     </td>
                     <td>
                         <input class="form-check-input chkEstudiantes" type="checkbox" th:value="${estudiante.id}">
