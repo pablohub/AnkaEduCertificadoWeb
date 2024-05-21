@@ -126,10 +126,10 @@ public class EstudianteService implements IEstudianteService {
                             estudiante.setCodigo(currentCell.toString());
                             String dataEncrypted = AESEncryption.encrypt(
                                             currentCell.toString())
-                                    .replace("/", "")
-                                    .replace("?", "")
-                                    .replace("=", "");
-                            dataEncrypted = Util.recortarYCompletar(dataEncrypted, 'C');
+                                    .replace("/", "e")
+                                    .replace("?", "q")
+                                    .replace("=", "i");
+                            dataEncrypted = Util.recortarYCompletar(dataEncrypted, Util.generateRandomLetter(), 25);
                             estudiante.setCodigoEncriptado(dataEncrypted);
                             break;
                         case 1:

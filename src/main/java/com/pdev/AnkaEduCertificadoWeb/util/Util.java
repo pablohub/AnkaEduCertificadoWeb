@@ -1,24 +1,43 @@
 package com.pdev.AnkaEduCertificadoWeb.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Random;
+
 public class Util {
 
-    public static String recortarYCompletar(String input, char fillChar) {
+    private static final Logger logger = LoggerFactory.getLogger(Util.class);
+    public static String recortarYCompletar(String input, char fillChar, int length) {
         if (input == null) {
             input = "";
         }
 
-        // Recortar la cadena a 20 caracteres si es más larga
-        if (input.length() > 20) {
-            input = input.substring(0, 20);
+        if (input.length() > length) {
+            input = input.substring(0, length);
         }
 
-        // Completar la cadena a 20 caracteres si es más corta
         StringBuilder result = new StringBuilder(input);
-        while (result.length() < 20) {
+        while (result.length() < length) {
             result.append(fillChar);
         }
 
         return result.toString();
+    }
+
+    public static char generateRandomLetter() {
+        Random random = new Random();
+        // Elige si la letra será mayúscula o minúscula
+        boolean isUpperCase = random.nextBoolean();
+        // Genera una letra aleatoria basada en el rango ASCII
+        char randomLetter;
+        if (isUpperCase) {
+            randomLetter = (char) (random.nextInt(26) + 'A');
+        } else {
+            randomLetter = (char) (random.nextInt(26) + 'a');
+        }
+        logger.info("Random Letter: " + randomLetter);
+        return randomLetter;
     }
 
 }
