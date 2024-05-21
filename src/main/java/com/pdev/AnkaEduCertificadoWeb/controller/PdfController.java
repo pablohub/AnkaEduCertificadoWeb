@@ -1,7 +1,5 @@
 package com.pdev.AnkaEduCertificadoWeb.controller;
 
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Font;
 import com.pdev.AnkaEduCertificadoWeb.model.Estudiante;
 import com.pdev.AnkaEduCertificadoWeb.service.IEstudianteService;
 import com.pdev.AnkaEduCertificadoWeb.util.QRGenerator;
@@ -41,10 +39,8 @@ public class PdfController {
     public void certificadoAnka(@PathVariable long id, HttpServletResponse response) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        // Cargar el archivo PDF original
-
         Estudiante estudiante = estudianteService.obtenerEstudiantePorId(id);
-        Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoAnka.pdf");
+        Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoCIP.pdf");
         try{
 
             ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
