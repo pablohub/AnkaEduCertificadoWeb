@@ -204,8 +204,7 @@ public class PdfController {
             //Image to be added in existing pdf file.
             QRGenerator qrGenerator = new QRGenerator();
             Image image = Image.getInstance(qrGenerator.imageToBytes(qrGenerator.generarCodigoQR(urlQrCode)));
-            //image.scaleAbsolute(96, 96); //Scale image's width and height
-            image.scaleAbsolute(92, 92); //scale for railway
+            image.scaleAbsolute(96, 96); //Scale image's width and height
             image.setAbsolutePosition(712.25f, 46.75f); //Set position for image in PDF
 
             // loop on all the PDF pages
