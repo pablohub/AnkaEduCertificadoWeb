@@ -71,7 +71,8 @@ btnExportarPdf.onclick = () => {
     chkEstudiantes.forEach((chk) => {
         if(chk.checked) ids.push(chk.value)
     })
-
+    btnExportarPdf.disabled = true
+    btnExportarPdf.innerHTML = 'Espere...'
     downloadPdfs(ids);
 }
 
@@ -100,7 +101,11 @@ async function downloadPdfs(ids) {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
     } catch (error) {
+        alert(error)
         console.error('Error:', error);
+    } finally{
+        btnExportarPdf.disabled = false
+        btnExportarPdf.innerHTML = 'Exportar PDFs'
     }
 }
 
