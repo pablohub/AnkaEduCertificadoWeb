@@ -16,6 +16,7 @@ new DataTable('#tblEstudiante', {
 
 const seccionEliminar = id('seccionEliminar')
 const btnEliminarRegistros = id('btnEliminarRegistros')
+const btnExportarPdf = id('btnExportarPdf')
 const chkAll = id('chkAll')
 const chkEstudiantes = all('.chkEstudiantes')
 const tbody = q('#tblEstudiante tbody')
@@ -63,6 +64,44 @@ btnEliminarRegistros.onclick = () => {
         window.location.href = `${pathEstudiante}/grupo/${grupoId}`;
       })
       .catch(error => console.error('Error:', error));
+}
+
+btnExportarPdf.onclick = () => {
+    let ids = []
+    chkEstudiantes.forEach((chk) => {
+        if(chk.checked) ids.push(chk.value)
+    })
+
+    downloadPdfs(ids);
+}
+
+async function downloadPdfs(ids) {
+    try {
+        const response = await fetch(`/exportarPdfs/${pathEstudiante}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+            },
+            body: ids.join(','),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al descargar el archivo');
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Certificados.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
 
 chkAll.onclick = (event) => {

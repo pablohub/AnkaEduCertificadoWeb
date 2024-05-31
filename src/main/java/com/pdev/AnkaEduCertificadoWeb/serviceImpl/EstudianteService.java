@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -71,6 +72,17 @@ public class EstudianteService implements IEstudianteService {
     }
 
     @Override
+    public List<Estudiante> listarEstudiantesPorIds(String strIds) {
+        logger.info("Listar estudiantes por ids");
+        List<Long> ids = new ArrayList<>();
+        String[] idsArray = strIds.split(",");
+        for(String id : idsArray){
+            ids.add(Long.parseLong(id));
+        }
+        return estudianteRepository.findAllById(ids);
+    }
+
+    @Override
     public Estudiante obtenerEstudiantePorCodigoEncriptado(String codigoEncriptado) {
         return estudianteRepository.findByCodigoEncriptado(codigoEncriptado);
     }
@@ -78,7 +90,6 @@ public class EstudianteService implements IEstudianteService {
     @Override
     public void eliminarEstudiantesPorIds(String ids) {
         String[] idsArray = ids.split(",");
-        List<Long> idsEstudiantes = new ArrayList<>();
         for(String id : idsArray){
             estudianteRepository.deleteById(Long.parseLong(id));
         }

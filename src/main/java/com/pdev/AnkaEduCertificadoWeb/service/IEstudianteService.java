@@ -12,6 +12,7 @@ public interface IEstudianteService {
     void cargarEstudiantesDesdeExcel(MultipartFile file, String codigoCertificado);
     List<Estudiante> listarEstudiantes(String codigoCertificado);
     Estudiante obtenerEstudiantePorId(long id);
+    List<Estudiante> listarEstudiantesPorIds(String strIds);
     Estudiante obtenerEstudiantePorCodigoEncriptado(String codigoEncriptado);
     void eliminarEstudiantesPorIds(String ids);
 
