@@ -43,7 +43,7 @@ public class PdfController {
     public void certificadoAnka(@PathVariable long id, HttpServletResponse response) throws IOException {
         Estudiante estudiante = estudianteService.obtenerEstudiantePorId(id);
         ByteArrayOutputStream outputStream = pdfService.generatePdfAnka(estudiante);
-        String nombrePdf = generarNombrePdf(estudiante.getCodigo(), estudiante.getNombres());
+        String nombrePdf = estudiante.getNombrePdf();
         //headers.setContentDispositionFormData("inline", nombrePdf + ".pdf");
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "inline; filename=" + nombrePdf + ".pdf");
@@ -63,7 +63,7 @@ public class PdfController {
     public void certificadoCIP(@PathVariable long id, HttpServletResponse response) throws IOException {
         Estudiante estudiante = estudianteService.obtenerEstudiantePorId(id);
         ByteArrayOutputStream outputStream = pdfService.generatePdfCIP(estudiante);
-        String nombrePdf = generarNombrePdf(estudiante.getCodigo(), estudiante.getNombres());
+        String nombrePdf = estudiante.getNombrePdf();
         //headers.setContentDispositionFormData("inline", nombrePdf + ".pdf");
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "inline; filename=" + nombrePdf + ".pdf");
@@ -99,7 +99,7 @@ public class PdfController {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (ZipOutputStream zos = new ZipOutputStream(baos)) {
             for (int i = 0; i < pdfs.size(); i++) {
-                String nombrePdf = generarNombrePdf(estudiantes.get(i).getCodigo(), estudiantes.get(i).getNombres());
+                String nombrePdf = estudiantes.get(i).getNombrePdf();
                 ZipEntry entry = new ZipEntry(nombrePdf + ".pdf");
                 entry.setSize(pdfs.get(i).length);
                 zos.putNextEntry(entry);

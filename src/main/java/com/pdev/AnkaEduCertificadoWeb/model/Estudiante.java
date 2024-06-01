@@ -40,4 +40,7 @@ public class Estudiante {
     private String codigoCertificado;
 
     private String codigoEncriptado;
+
+    //@Column(columnDefinition = )
+    private String nombrePdf;
 }

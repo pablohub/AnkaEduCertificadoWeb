@@ -54,6 +54,10 @@ public class EstudianteService implements IEstudianteService {
         try{
             List<Estudiante> estudiantes = excelAListaEstudiantes(file.getInputStream(), codigoCertificado);
             logger.info("#Estudiantes size: " + estudiantes.size());
+            for(Estudiante estudiante : estudiantes){
+                Estudiante estudianteEncontrado = estudianteRepository.findByCodigo(estudiante.getCodigo());
+                if(estudianteEncontrado != null) estudiante.setId(estudianteEncontrado.getId());
+            }
             estudianteRepository.saveAll(estudiantes);
         }catch (IOException e){
             throw new RuntimeException("fail to store excel data: " + e.getMessage());
@@ -157,6 +161,9 @@ public class EstudianteService implements IEstudianteService {
                             break;
                         case 5:
                             estudiante.setCentroCapacitacion(currentCell.toString());
+                            break;
+                        case 6:
+                            estudiante.setNombrePdf(currentCell.toString());
                             break;
                         default:
                             break;
