@@ -65,4 +65,9 @@ public class GrupoService implements IGrupoService {
         }
         grupoRepository.deleteById(id);
     }
+
+    @Override
+    public Grupo obtenerGrupoPorId(Long id) {
+        return grupoRepository.getReferenceById(id);
+    }
 }

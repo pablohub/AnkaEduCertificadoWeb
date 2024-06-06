@@ -13,6 +13,8 @@ public class Grupo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    private Integer orden;
+
     @Column(name = "centro_capacitacion")
     private String centroCapacitacion;
 
@@ -27,4 +29,5 @@ public class Grupo {
     @Column(name = "nombre")
     private String nombre;
 
+    private String nombreTemplatePdf;
 }

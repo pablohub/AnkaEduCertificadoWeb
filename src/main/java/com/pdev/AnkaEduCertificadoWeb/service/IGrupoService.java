@@ -12,4 +12,6 @@ public interface IGrupoService {
     List<Grupo> listarGrupos(String centroCapacitacion);
     void eliminarGrupo(Long id);
 
+    Grupo obtenerGrupoPorId(Long id);
+
 }
