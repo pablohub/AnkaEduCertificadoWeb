@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.pdev.AnkaEduCertificadoWeb.model.Estudiante;
 import com.pdev.AnkaEduCertificadoWeb.service.IPdfService;
 import com.pdev.AnkaEduCertificadoWeb.util.QRGenerator;
+import com.pdev.AnkaEduCertificadoWeb.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -28,10 +29,10 @@ public class IPdfServiceImpl implements IPdfService {
     }
 
     @Override
-    public ByteArrayOutputStream generatePdfAnka(Estudiante estudiante) {
+    public ByteArrayOutputStream generatePdfAnka(Estudiante estudiante, String nombreTemplatePdf) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoAnka.pdf");
+        String template = Util.isNullOrEmpty(nombreTemplatePdf) ? "TemplateCertificadoAnka.pdf" : nombreTemplatePdf;
+        Resource resource = resourceLoader.getResource("classpath:static/files/" + template);
         try{
 
             ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
@@ -135,9 +136,10 @@ public class IPdfServiceImpl implements IPdfService {
     }
 
     @Override
-    public ByteArrayOutputStream generatePdfCIP(Estudiante estudiante) {
+    public ByteArrayOutputStream generatePdfCIP(Estudiante estudiante, String nombreTemplatePdf) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Resource resource = resourceLoader.getResource("classpath:static/files/TemplateCertificadoCIP.pdf");
+        String template = Util.isNullOrEmpty(nombreTemplatePdf) ? "TemplateCertificadoCIP.pdf" : nombreTemplatePdf;
+        Resource resource = resourceLoader.getResource("classpath:static/files/" + template);
         try{
 
             ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");

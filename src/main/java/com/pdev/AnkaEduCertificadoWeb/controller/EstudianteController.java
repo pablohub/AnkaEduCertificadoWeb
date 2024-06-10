@@ -85,7 +85,7 @@ public class EstudianteController {
     @PostMapping("/uploadExcelAnka")
     public String uploadExcelAnka(RedirectAttributes redirectAttrs, @RequestParam("file") MultipartFile file, @RequestParam("grupoId") String grupoId){
         logger.info("grupoID carga: " + grupoId);
-        String message = uploadExcel(file, "ANKA-" + grupoId);
+        String message = uploadExcel(file, "ANKA-" + grupoId, Long.parseLong(grupoId));
         redirectAttrs.addFlashAttribute("message", message);
         redirectAttrs.addFlashAttribute("grupoId", grupoId);
         return "redirect:/anka";
@@ -94,7 +94,7 @@ public class EstudianteController {
     @PostMapping("/uploadExcelCIP")
     public String uploadExcelCIP(RedirectAttributes redirectAttrs, @RequestParam("file") MultipartFile file, @RequestParam("grupoId") String grupoId){
         logger.info("grupoID carga: " + grupoId);
-        String message = uploadExcel(file, "CIP-" + grupoId);
+        String message = uploadExcel(file, "CIP-" + grupoId, Long.parseLong(grupoId));
         redirectAttrs.addFlashAttribute("message", message);
         redirectAttrs.addFlashAttribute("grupoId", grupoId);
         return "redirect:/cip";
@@ -118,7 +118,7 @@ public class EstudianteController {
         return new ResponseEntity(responseGenerico, HttpStatus.OK);
     }
 
-    private String uploadExcel(MultipartFile file, String codigoCertificado){
+    private String uploadExcel(MultipartFile file, String codigoCertificado, long grupoId){
         String message = "";
         logger.info("#######Upload " + file.getOriginalFilename());
         logger.info("#######Upload " + file.getSize());

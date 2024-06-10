@@ -1,8 +1,10 @@
 package com.pdev.AnkaEduCertificadoWeb.controller;
 
 import com.pdev.AnkaEduCertificadoWeb.model.Estudiante;
+import com.pdev.AnkaEduCertificadoWeb.model.Grupo;
 import com.pdev.AnkaEduCertificadoWeb.model.response.ResponseGenerico;
 import com.pdev.AnkaEduCertificadoWeb.service.IEstudianteService;
+import com.pdev.AnkaEduCertificadoWeb.service.IGrupoService;
 import com.pdev.AnkaEduCertificadoWeb.serviceImpl.IPdfServiceImpl;
 import com.pdev.AnkaEduCertificadoWeb.util.QRGenerator;
 import com.itextpdf.text.Image;
@@ -36,13 +38,23 @@ public class PdfController {
     private IEstudianteService estudianteService;
 
     @Autowired
+    private IGrupoService grupoService;
+
+    @Autowired
     private IPdfServiceImpl pdfService;
 
     @GetMapping("/certificadoAnka/{id}")
     @ResponseBody
     public void certificadoAnka(@PathVariable long id, HttpServletResponse response) throws IOException {
         Estudiante estudiante = estudianteService.obtenerEstudiantePorId(id);
-        ByteArrayOutputStream outputStream = pdfService.generatePdfAnka(estudiante);
+        String nombrePdfTemplate = null;
+        String[] args = estudiante.getCodigoCertificado().split("-");
+        if(args.length == 2) {
+            Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
+            nombrePdfTemplate = grupo.getNombreTemplatePdf();
+        }
+
+        ByteArrayOutputStream outputStream = pdfService.generatePdfAnka(estudiante, nombrePdfTemplate);
         String nombrePdf = estudiante.getNombrePdf();
         //headers.setContentDispositionFormData("inline", nombrePdf + ".pdf");
         response.setContentType("application/pdf");
@@ -62,7 +74,13 @@ public class PdfController {
     @ResponseBody
     public void certificadoCIP(@PathVariable long id, HttpServletResponse response) throws IOException {
         Estudiante estudiante = estudianteService.obtenerEstudiantePorId(id);
-        ByteArrayOutputStream outputStream = pdfService.generatePdfCIP(estudiante);
+        String nombrePdfTemplate = null;
+        String[] args = estudiante.getCodigoCertificado().split("-");
+        if(args.length == 2) {
+            Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
+            nombrePdfTemplate = grupo.getNombreTemplatePdf();
+        }
+        ByteArrayOutputStream outputStream = pdfService.generatePdfCIP(estudiante, nombrePdfTemplate);
         String nombrePdf = estudiante.getNombrePdf();
         //headers.setContentDispositionFormData("inline", nombrePdf + ".pdf");
         response.setContentType("application/pdf");
@@ -86,13 +104,25 @@ public class PdfController {
         List<byte[]> pdfs = new ArrayList<>();
         if(pathEstudiante.equalsIgnoreCase("estudianteAnka")){
             for(Estudiante estudiante : estudiantes) {
-                ByteArrayOutputStream outputStream = pdfService.generatePdfAnka(estudiante);
+                String nombrePdfTemplate = null;
+                String[] args = estudiante.getCodigoCertificado().split("-");
+                if(args.length == 2) {
+                    Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
+                    nombrePdfTemplate = grupo.getNombreTemplatePdf();
+                }
+                ByteArrayOutputStream outputStream = pdfService.generatePdfAnka(estudiante, nombrePdfTemplate);
                 pdfs.add(outputStream.toByteArray());
             }
         }
         if(pathEstudiante.equalsIgnoreCase("estudianteCIP")){
             for(Estudiante estudiante : estudiantes) {
-                ByteArrayOutputStream outputStream = pdfService.generatePdfCIP(estudiante);
+                String nombrePdfTemplate = null;
+                String[] args = estudiante.getCodigoCertificado().split("-");
+                if(args.length == 2) {
+                    Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
+                    nombrePdfTemplate = grupo.getNombreTemplatePdf();
+                }
+                ByteArrayOutputStream outputStream = pdfService.generatePdfCIP(estudiante, nombrePdfTemplate);
                 pdfs.add(outputStream.toByteArray());
             }
         }

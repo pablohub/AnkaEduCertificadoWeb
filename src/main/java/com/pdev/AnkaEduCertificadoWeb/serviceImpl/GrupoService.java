@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.pdev.AnkaEduCertificadoWeb.util.Constantes.*;
 
@@ -46,13 +48,19 @@ public class GrupoService implements IGrupoService {
     @Override
     public List<Grupo> listarTodosLosGrupos() {
         logger.info("listarTodosLosGrupos");
-        return grupoRepository.findAll();
+        return grupoRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Grupo::getOrden, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Grupo> listarGrupos(String centroCapacitacion) {
         logger.info("Listar grupos");
-        return grupoRepository.findByCentroCapacitacion(centroCapacitacion);
+        return grupoRepository.findByCentroCapacitacion(centroCapacitacion)
+                .stream()
+                .sorted(Comparator.comparing(Grupo::getOrden, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
     }
 
     @Override

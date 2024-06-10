@@ -21,6 +21,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class GrupoController {
@@ -34,7 +36,17 @@ public class GrupoController {
     @GetMapping("/grupos")
     public String grupos(Model model){
         logger.info("grupos");
+        List<String> options = new ArrayList<>();
+        options.add("ANKA");
+        options.add("CIP");
+
         Grupo grupo = new Grupo();
+        if(model.getAttribute("grupoId") != null){
+            Long id = Long.parseLong(model.getAttribute("grupoId").toString());
+            grupo = grupoService.obtenerGrupoPorId(id);
+        }
+
+        model.addAttribute("options", options);
         model.addAttribute("grupo", grupo);
         model.addAttribute("listaGrupos", grupoService.listarTodosLosGrupos());
         return "grupos";
@@ -44,12 +56,6 @@ public class GrupoController {
     public String crearGrupo(RedirectAttributes redirectAttrs, @ModelAttribute("grupo") Grupo grupo, @RequestParam("file") MultipartFile file){
         String message = uploadExcel(file, grupo);
         redirectAttrs.addFlashAttribute("message", message);
-        return "redirect:/grupos";
-    }
-
-    @GetMapping("/eliminarGrupo/{id}")
-    public String eliminarGrupo(@PathVariable Long id){
-        grupoService.eliminarGrupo(id);
         return "redirect:/grupos";
     }
 
@@ -82,13 +88,28 @@ public class GrupoController {
         }
     }
 
+    @GetMapping("/eliminarGrupo/{id}")
+    public String eliminarGrupo(@PathVariable Long id){
+        grupoService.eliminarGrupo(id);
+        return "redirect:/grupos";
+    }
+
+    @GetMapping("/editarGrupo/{id}")
+    public String editarGrupo(RedirectAttributes redirectAttrs, Model model, @PathVariable Long id){
+        redirectAttrs.addFlashAttribute("grupoId", id);
+        return "redirect:/grupos";
+    }
+
     private String uploadExcel(MultipartFile file, Grupo grupo){
         String message = "";
         logger.info("#######Upload " + file.getOriginalFilename());
         logger.info("#######Upload " + file.getSize());
         logger.info("#######Upload " + file.getContentType());
 
-        if(PdfHelper.hasPdfFormat(file)){
+        if(file.isEmpty()){
+            grupoService.crearGrupo(grupo);
+            message = "Grupo creado correctamente!";
+        }else if(PdfHelper.hasPdfFormat(file)){
             try{
                 File uploadDir = new File(UPLOAD_DIR);
                 if (!uploadDir.exists()) {

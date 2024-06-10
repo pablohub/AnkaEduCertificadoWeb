@@ -40,4 +40,8 @@ public class Util {
         return randomLetter;
     }
 
+    public static boolean isNullOrEmpty(String value){
+        return value == null || value.isEmpty();
+    }
+
 }

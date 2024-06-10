@@ -5,7 +5,9 @@ const all = document.querySelectorAll.bind(document)
 new DataTable('#tblGrupos', {
     language: {
         url: 'https://cdn.datatables.net/plug-ins/2.0.3/i18n/es-ES.json'
-    }
+    },
+    aaSorting: [],
+    //ordering: false
 })
 
 new DataTable('#tblEstudiante', {
