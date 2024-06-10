@@ -17,6 +17,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 @Service
@@ -28,11 +30,14 @@ public class IPdfServiceImpl implements IPdfService {
         this.resourceLoader = resourceLoader;
     }
 
+    private static final String UPLOAD_DIR = "src/main/resources/static/files/";
+
     @Override
     public ByteArrayOutputStream generatePdfAnka(Estudiante estudiante, String nombreTemplatePdf) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         String template = Util.isNullOrEmpty(nombreTemplatePdf) ? "TemplateCertificadoAnka.pdf" : nombreTemplatePdf;
-        Resource resource = resourceLoader.getResource("classpath:static/files/" + template);
+        File file = new File(UPLOAD_DIR + template);
+        //Resource resource = resourceLoader.getResource("classpath:static/files/" + template);
         try{
 
             ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
@@ -60,7 +65,9 @@ public class IPdfServiceImpl implements IPdfService {
             byte[] fontBytesfontHelvetica47 = baosfontHelvetica47.toByteArray();
             BaseFont baseFontHelvetica47 = BaseFont.createFont("Helvetica_47.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, false, fontBytesfontHelvetica47, null);
 
-            PdfReader pdfReader = new PdfReader(resource.getInputStream());
+            //PdfReader pdfReader = new PdfReader(resource.getInputStream());
+            FileInputStream fis = new FileInputStream(file);
+            PdfReader pdfReader = new PdfReader(fis);
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
             String codigoEncriptado = estudiante.getCodigoEncriptado();
             String urlQrCode = ServletUriComponentsBuilder.fromCurrentContextPath().build().toString() + "/autenticacionCertificado/" + codigoEncriptado;
@@ -139,7 +146,8 @@ public class IPdfServiceImpl implements IPdfService {
     public ByteArrayOutputStream generatePdfCIP(Estudiante estudiante, String nombreTemplatePdf) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         String template = Util.isNullOrEmpty(nombreTemplatePdf) ? "TemplateCertificadoCIP.pdf" : nombreTemplatePdf;
-        Resource resource = resourceLoader.getResource("classpath:static/files/" + template);
+        File file = new File(UPLOAD_DIR + template);
+        //Resource resource = resourceLoader.getResource("classpath:static/files/" + template);
         try{
 
             ClassPathResource resourceHelvetica97 = new ClassPathResource("fonts/Helvetica_97.ttf");
@@ -167,7 +175,9 @@ public class IPdfServiceImpl implements IPdfService {
             byte[] fontBytesfontHelvetica47 = baosfontHelvetica47.toByteArray();
             BaseFont baseFontHelvetica47 = BaseFont.createFont("Helvetica_47.ttf", BaseFont.CP1257, BaseFont.EMBEDDED, false, fontBytesfontHelvetica47, null);
 
-            PdfReader pdfReader = new PdfReader(resource.getInputStream());
+            //PdfReader pdfReader = new PdfReader(resource.getInputStream());
+            FileInputStream fis = new FileInputStream(file);
+            PdfReader pdfReader = new PdfReader(fis);
             PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
             String codigoEncriptado = estudiante.getCodigoEncriptado();
             String urlQrCode = ServletUriComponentsBuilder.fromCurrentContextPath().build().toString() + "/autenticacionCertificado/" + codigoEncriptado;
