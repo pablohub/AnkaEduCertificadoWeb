@@ -1,14 +1,11 @@
 package com.pdev.AnkaEduCertificadoWeb.controller;
 
-import com.pdev.AnkaEduCertificadoWeb.model.Estudiante;
 import com.pdev.AnkaEduCertificadoWeb.model.Grupo;
 import com.pdev.AnkaEduCertificadoWeb.service.IGrupoService;
-import com.pdev.AnkaEduCertificadoWeb.util.ExcelHelper;
 import com.pdev.AnkaEduCertificadoWeb.util.PdfHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +26,7 @@ public class GrupoController {
 
     private static final Logger logger = LoggerFactory.getLogger(EstudianteController.class);
     private static final String UPLOAD_DIR = "src/main/resources/static/files/";
+    //private static final String UPLOAD_DIR = "/appWeb/AnkaEduCertificadoWeb/templateCertificados/";
 
     @Autowired
     private IGrupoService grupoService;
@@ -54,7 +52,7 @@ public class GrupoController {
 
     @PostMapping("/crearGrupo")
     public String crearGrupo(RedirectAttributes redirectAttrs, @ModelAttribute("grupo") Grupo grupo, @RequestParam("file") MultipartFile file){
-        String message = uploadExcel(file, grupo);
+        String message = uploadPdf(file, grupo);
         redirectAttrs.addFlashAttribute("message", message);
         return "redirect:/grupos";
     }
@@ -100,7 +98,7 @@ public class GrupoController {
         return "redirect:/grupos";
     }
 
-    private String uploadExcel(MultipartFile file, Grupo grupo){
+    private String uploadPdf(MultipartFile file, Grupo grupo){
         String message = "";
         logger.info("#######Upload " + file.getOriginalFilename());
         logger.info("#######Upload " + file.getSize());
@@ -122,6 +120,7 @@ public class GrupoController {
                 // Guardar el archivo en la ubicación especificada
                 Files.write(path, file.getBytes());
                 grupo.setNombreTemplatePdf(file.getOriginalFilename());
+                //grupo.setPdfBase64(PdfHelper.Base64EncodePdf(file));
                 grupoService.crearGrupo(grupo);
                 message = "Pdf cargado correctamente!: " + file.getOriginalFilename();
             }catch (Exception e){

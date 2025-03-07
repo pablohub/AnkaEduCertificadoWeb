@@ -25,7 +25,7 @@ public class WebSecurityConfig {
                 //.and()
                 .authorizeRequests((requests) -> requests
                         //.antMatchers("../static/css", "../static/images").permitAll()
-                        .antMatchers("/css/**", "/js/**", "/images/**", "/public/**", "/autenticacionCertificado/**").permitAll()
+                        .antMatchers("/css/**", "/js/**", "/images/**", "/public/**", "/autenticacionCertificado/**", "/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -42,8 +42,8 @@ public class WebSecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails user =
                 User.withDefaultPasswordEncoder()
-                        .username("admin")
-                        .password("123")
+                        .username("AnkaStudio")
+                        .password("AnkaStudio#123")
                         .roles("USER")
                         .build();
 

@@ -43,4 +43,9 @@ public class Estudiante {
 
     //@Column(columnDefinition = )
     private String nombrePdf;
+
+    private String email;
+
+    @Column(name = "isEmailEnviado", columnDefinition = "boolean default false")
+    private boolean emailEnviado;
 }

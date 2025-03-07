@@ -31,6 +31,7 @@ public class IPdfServiceImpl implements IPdfService {
     }
 
     private static final String UPLOAD_DIR = "src/main/resources/static/files/";
+    //private static final String UPLOAD_DIR = "/appWeb/AnkaEduCertificadoWeb/templateCertificados/";
 
     @Override
     public ByteArrayOutputStream generatePdfAnka(Estudiante estudiante, String nombreTemplatePdf) {

@@ -3,12 +3,17 @@ package com.pdev.AnkaEduCertificadoWeb.controller;
 import com.pdev.AnkaEduCertificadoWeb.model.Estudiante;
 import com.pdev.AnkaEduCertificadoWeb.model.Grupo;
 import com.pdev.AnkaEduCertificadoWeb.model.response.ResponseGenerico;
+import com.pdev.AnkaEduCertificadoWeb.service.IEmailService;
 import com.pdev.AnkaEduCertificadoWeb.service.IEstudianteService;
 import com.pdev.AnkaEduCertificadoWeb.service.IGrupoService;
+import com.pdev.AnkaEduCertificadoWeb.serviceImpl.EmailServiceImpl;
 import com.pdev.AnkaEduCertificadoWeb.serviceImpl.IPdfServiceImpl;
+import com.pdev.AnkaEduCertificadoWeb.util.EmailHelper;
+import com.pdev.AnkaEduCertificadoWeb.util.PdfHelper;
 import com.pdev.AnkaEduCertificadoWeb.util.QRGenerator;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.*;
+import com.pdev.AnkaEduCertificadoWeb.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +30,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -43,6 +50,12 @@ public class PdfController {
     @Autowired
     private IPdfServiceImpl pdfService;
 
+    @Autowired
+    private IEmailService emailService;
+
+    @Autowired
+    private EmailHelper emailHelper;
+
     @GetMapping("/certificadoAnka/{id}")
     @ResponseBody
     public void certificadoAnka(@PathVariable long id, HttpServletResponse response) throws IOException {
@@ -52,6 +65,9 @@ public class PdfController {
         if(args.length == 2) {
             Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
             nombrePdfTemplate = grupo.getNombreTemplatePdf();
+            if(!Util.isNullOrEmpty(grupo.getPdfBase64())){
+                PdfHelper.Base64DecodePdf(grupo.getPdfBase64(), nombrePdfTemplate);
+            }
         }
 
         ByteArrayOutputStream outputStream = pdfService.generatePdfAnka(estudiante, nombrePdfTemplate);
@@ -79,6 +95,9 @@ public class PdfController {
         if(args.length == 2) {
             Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
             nombrePdfTemplate = grupo.getNombreTemplatePdf();
+            if(!Util.isNullOrEmpty(grupo.getPdfBase64())){
+                PdfHelper.Base64DecodePdf(grupo.getPdfBase64(), nombrePdfTemplate);
+            }
         }
         ByteArrayOutputStream outputStream = pdfService.generatePdfCIP(estudiante, nombrePdfTemplate);
         String nombrePdf = estudiante.getNombrePdf();
@@ -102,14 +121,22 @@ public class PdfController {
         logger.info("exportarPdfs " + pathEstudiante + ": " + ids);
         List<Estudiante> estudiantes = estudianteService.listarEstudiantesPorIds(ids);
         List<byte[]> pdfs = new ArrayList<>();
+        boolean pdfGenerado = false;
         if(pathEstudiante.equalsIgnoreCase("estudianteAnka")){
             for(Estudiante estudiante : estudiantes) {
                 String nombrePdfTemplate = null;
-                String[] args = estudiante.getCodigoCertificado().split("-");
-                if(args.length == 2) {
-                    Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
-                    nombrePdfTemplate = grupo.getNombreTemplatePdf();
+                if(!pdfGenerado){
+                    String[] args = estudiante.getCodigoCertificado().split("-");
+                    if(args.length == 2) {
+                        Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
+                        nombrePdfTemplate = grupo.getNombreTemplatePdf();
+                        if(!Util.isNullOrEmpty(grupo.getPdfBase64())){
+                            PdfHelper.Base64DecodePdf(grupo.getPdfBase64(), nombrePdfTemplate);
+                            pdfGenerado = true;
+                        }
+                    }
                 }
+
                 ByteArrayOutputStream outputStream = pdfService.generatePdfAnka(estudiante, nombrePdfTemplate);
                 pdfs.add(outputStream.toByteArray());
             }
@@ -117,10 +144,16 @@ public class PdfController {
         if(pathEstudiante.equalsIgnoreCase("estudianteCIP")){
             for(Estudiante estudiante : estudiantes) {
                 String nombrePdfTemplate = null;
-                String[] args = estudiante.getCodigoCertificado().split("-");
-                if(args.length == 2) {
-                    Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
-                    nombrePdfTemplate = grupo.getNombreTemplatePdf();
+                if(!pdfGenerado){
+                    String[] args = estudiante.getCodigoCertificado().split("-");
+                    if(args.length == 2) {
+                        Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
+                        nombrePdfTemplate = grupo.getNombreTemplatePdf();
+                        if(!Util.isNullOrEmpty(grupo.getPdfBase64())){
+                            PdfHelper.Base64DecodePdf(grupo.getPdfBase64(), nombrePdfTemplate);
+                            pdfGenerado = true;
+                        }
+                    }
                 }
                 ByteArrayOutputStream outputStream = pdfService.generatePdfCIP(estudiante, nombrePdfTemplate);
                 pdfs.add(outputStream.toByteArray());
@@ -143,6 +176,79 @@ public class PdfController {
 
         return new ResponseEntity<>(baos.toByteArray(), headers, HttpStatus.OK);
     }
+
+    @PostMapping("/enviarEmail/{pathEstudiante}")
+    @ResponseBody
+    public ResponseEntity enviarEmail(@PathVariable String pathEstudiante, @RequestBody String ids) throws IOException{
+        logger.info("enviarEmail " + pathEstudiante + ": " + ids);
+        ResponseGenerico responseGenerico = new ResponseGenerico();
+        responseGenerico.setCodError(0);
+        responseGenerico.setMensaje("Proceso enviado");
+        List<Estudiante> estudiantes = estudianteService.listarEstudiantesPorIds(ids);
+        boolean pdfGenerado = false;
+        if(pathEstudiante.equalsIgnoreCase("estudianteAnka")){
+            for(Estudiante estudiante : estudiantes) {
+                String nombrePdfTemplate = null;
+                if(!pdfGenerado){
+                    String[] args = estudiante.getCodigoCertificado().split("-");
+                    if(args.length == 2) {
+                        Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
+                        nombrePdfTemplate = grupo.getNombreTemplatePdf();
+                        if(!Util.isNullOrEmpty(grupo.getPdfBase64())){
+                            PdfHelper.Base64DecodePdf(grupo.getPdfBase64(), nombrePdfTemplate);
+                            pdfGenerado = true;
+                        }
+                    }
+                }
+
+                ByteArrayOutputStream outputStream = pdfService.generatePdfAnka(estudiante, nombrePdfTemplate);
+                Map<String, Object> templateModel = new HashMap<>();
+                templateModel.put("nombreEstudiante", estudiante.getNombres());
+                String body = emailHelper.generarHtmlFromThymeleafTemplate("/emailTemplates/anka", templateModel);
+                boolean emailEnviado = emailService.sendEmailWithAttachment(
+                        estudiante.getEmail(),
+                        "ANKA - CERTIFICADO MODELADOR BIM",
+                        body,
+                        outputStream,
+                        estudiante.getNombrePdf() + ".pdf"
+                );
+                estudiante.setEmailEnviado(emailEnviado);
+                estudianteService.guardarEstudiante(estudiante);
+            }
+        }
+        if(pathEstudiante.equalsIgnoreCase("estudianteCIP")){
+            for(Estudiante estudiante : estudiantes) {
+                String nombrePdfTemplate = null;
+                if(!pdfGenerado){
+                    String[] args = estudiante.getCodigoCertificado().split("-");
+                    if(args.length == 2) {
+                        Grupo grupo = grupoService.obtenerGrupoPorId(Long.parseLong(args[1]));
+                        nombrePdfTemplate = grupo.getNombreTemplatePdf();
+                        if(!Util.isNullOrEmpty(grupo.getPdfBase64())){
+                            PdfHelper.Base64DecodePdf(grupo.getPdfBase64(), nombrePdfTemplate);
+                            pdfGenerado = true;
+                        }
+                    }
+                }
+                ByteArrayOutputStream outputStream = pdfService.generatePdfCIP(estudiante, nombrePdfTemplate);
+                Map<String, Object> templateModel = new HashMap<>();
+                templateModel.put("nombreEstudiante", estudiante.getNombres());
+                String body = emailHelper.generarHtmlFromThymeleafTemplate("/emailTemplates/cip", templateModel);
+                boolean emailEnviado = emailService.sendEmailWithAttachment(
+                        estudiante.getEmail(),
+                        "CIP-CERTIFICADO",
+                        body,
+                        outputStream,
+                        estudiante.getNombrePdf() + ".pdf"
+                );
+                estudiante.setEmailEnviado(emailEnviado);
+                estudianteService.guardarEstudiante(estudiante);
+            }
+        }
+
+        return new ResponseEntity(responseGenerico, HttpStatus.OK);
+    }
+
     private String generarNombrePdf(String codigo, String nombres){
         try{
             return codigo.substring(codigo.length() - 2) + "_" + nombres.substring(0, nombres.indexOf(" "));

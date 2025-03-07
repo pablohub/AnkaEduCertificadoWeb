@@ -19,6 +19,7 @@ new DataTable('#tblEstudiante', {
 const seccionEliminar = id('seccionEliminar')
 const btnEliminarRegistros = id('btnEliminarRegistros')
 const btnExportarPdf = id('btnExportarPdf')
+const btnEnviarEmail = id('btnEnviarEmail')
 const chkAll = id('chkAll')
 const chkEstudiantes = all('.chkEstudiantes')
 const tbody = q('#tblEstudiante tbody')
@@ -51,7 +52,7 @@ btnEliminarRegistros.onclick = () => {
         if(chk.checked) ids.push(chk.value)
     })
 
-    fetch('/eliminarEstudiantes', {
+    fetch('/AnkaEduCertificadoWeb/eliminarEstudiantes', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ btnExportarPdf.onclick = () => {
 
 async function downloadPdfs(ids) {
     try {
-        const response = await fetch(`/exportarPdfs/${pathEstudiante}`, {
+        const response = await fetch(`/AnkaEduCertificadoWeb/exportarPdfs/${pathEstudiante}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,8 +116,44 @@ chkAll.onclick = (event) => {
     chkEstudiantes.forEach((element) => element.checked = event.target.checked)
 }
 
+btnEnviarEmail.onclick = () => {
+    let ids = []
+    chkEstudiantes.forEach((chk) => {
+        if(chk.checked) ids.push(chk.value)
+    })
+    btnEnviarEmail.disabled = true
+    btnEnviarEmail.innerHTML = 'Espere...'
+    enviarEmail(ids);
+}
+
+async function enviarEmail(ids) {
+    try {
+        const response = await fetch(`/AnkaEduCertificadoWeb/enviarEmail/${pathEstudiante}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
+            },
+            body: ids.join(','),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al enviar email');
+        }
+
+        const resp = await response;
+        window.location.href = `${pathEstudiante}/grupo/${grupoId}`;
+    } catch (error) {
+        alert(error)
+        console.error('Error:', error);
+    } finally{
+        btnEnviarEmail.disabled = false
+        btnEnviarEmail.innerHTML = 'Enviar Email'
+    }
+}
+
 const loadEstudiantes = () => {
-    fetch('/listaEstudiantesAnka', {
+    fetch('/AnkaEduCertificadoWeb/listaEstudiantesAnka', {
       method: 'GET',
       headers: {
           'Content-Type': 'application/json',

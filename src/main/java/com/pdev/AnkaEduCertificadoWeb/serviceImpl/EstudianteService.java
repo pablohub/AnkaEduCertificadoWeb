@@ -19,10 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.pdev.AnkaEduCertificadoWeb.util.Constantes.*;
 @Service
@@ -67,7 +65,12 @@ public class EstudianteService implements IEstudianteService {
     @Override
     public List<Estudiante> listarEstudiantes(String codigoCertificado) {
         logger.info("Listar estudiantes");
-        return estudianteRepository.findByCodigoCertificado(codigoCertificado);
+        /*return estudianteRepository
+                .findByCodigoCertificado(codigoCertificado)
+                .stream()
+                .sorted(Comparator.comparing(Estudiante::getCodigo, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());*/
+        return estudianteRepository.findAll();
     }
 
     @Override
@@ -105,16 +108,6 @@ public class EstudianteService implements IEstudianteService {
 
             Sheet sheet = workbook.getSheet("Estudiantes");
             Iterator<Row> rows = sheet.iterator();
-
-            String[] HEADERs = {
-                    "Código",
-                    "Nombres",
-                    "Curso",
-                    "Fecha de Inicio",
-                    "Fecha de Finalizacion",
-                    "Centro de Capacitación",
-                    "Código Certificado"
-            };
 
             List<Estudiante> estudiantes = new ArrayList<>();
 
@@ -164,6 +157,9 @@ public class EstudianteService implements IEstudianteService {
                             break;
                         case 6:
                             estudiante.setNombrePdf(currentCell.toString());
+                            break;
+                        case 7:
+                            estudiante.setEmail(currentCell.toString());
                             break;
                         default:
                             break;

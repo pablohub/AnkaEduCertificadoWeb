@@ -3,8 +3,10 @@ package com.pdev.AnkaEduCertificadoWeb.controller;
 import com.pdev.AnkaEduCertificadoWeb.model.Estudiante;
 import com.pdev.AnkaEduCertificadoWeb.model.Grupo;
 import com.pdev.AnkaEduCertificadoWeb.model.response.ResponseGenerico;
+import com.pdev.AnkaEduCertificadoWeb.service.IEmailService;
 import com.pdev.AnkaEduCertificadoWeb.service.IEstudianteService;
 import com.pdev.AnkaEduCertificadoWeb.service.IGrupoService;
+import com.pdev.AnkaEduCertificadoWeb.serviceImpl.EmailServiceImpl;
 import com.pdev.AnkaEduCertificadoWeb.util.ExcelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,9 @@ public class EstudianteController {
 
     @Autowired
     private IGrupoService grupoService;
+
+    @Autowired
+    private EmailServiceImpl emailService;
 
     @GetMapping("/anka")
     public String verPaginaEstudianteAnka(Model model){

@@ -28,6 +28,9 @@
                     <button class="btn btn-success" type="button" id="btnExportarPdf">
                         Exportar PDFs
                     </button>
+                    <button class="btn btn-info" type="button" id="btnEnviarEmail">
+                        Enviar Email
+                    </button>
                 </div>
             </div>
             <div class="col-md-6">
@@ -52,6 +55,7 @@
                     <th scope="col">F. Inicio</th>
                     <th scope="col">F. Finalización</th>
                     <th scope="col">Centro de Capacitación</th>
+                    <th scope="col">Email Enviado</th>
                     <th scope="col">Certificado</th>
                     <th scope="col"></th>
                 </tr>
@@ -60,11 +64,15 @@
                 <tr th:each="estudiante, itemStat : ${listaEstudiantes}">
                     <td th:text="${itemStat.count}"></td>
                     <td th:text="${estudiante.codigo}"></td>
-                    <td th:text="${estudiante.nombres}"></td>
+                    <td>
+                        <span th:text="${estudiante.nombres}"></span>
+                        <p class="text-info" th:text="${estudiante.email}"></p>
+                    </td>
                     <td th:text="${estudiante.curso}"></td>
                     <td th:text="${estudiante.fechaInicio}"></td>
                     <td th:text="${estudiante.fechaFinalizacion}"></td>
                     <td th:text="${estudiante.centroCapacitacion}"></td>
+                    <td th:text="${estudiante.emailEnviado?'Si':'No'}"></td>
                     <td>
                         <a th:href="@{/certificadoAnka/{id}(id=${estudiante.id})}" class="btn btn-primary" target="_blank">Certificado</a>
                     </td>

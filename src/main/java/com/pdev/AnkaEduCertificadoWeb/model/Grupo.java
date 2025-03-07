@@ -30,4 +30,7 @@ public class Grupo {
     private String nombre;
 
     private String nombreTemplatePdf;
+
+    @Lob
+    private String pdfBase64;
 }

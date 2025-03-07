@@ -11,6 +11,7 @@
 	<groupId>com.pdev</groupId>
 	<artifactId>AnkaEduCertificadoWeb</artifactId>
 	<version>0.0.1</version>
+	<packaging>war</packaging>
 	<name>AnkaEduCertificadoWeb</name>
 	<description>Se registra estudiantes asociados a grupos, en los cuales permite generar su certificado con un QR que redirige a una página dónde se le indica si es válido su certificado</description>
 	<properties>
@@ -20,6 +21,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<!--Inicio Dependencias agregadas-->
@@ -76,6 +83,12 @@
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.13.3</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
 		<!--Fin Dependencias agregadas-->
 
 	</dependencies>
